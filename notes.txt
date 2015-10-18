@@ -1,0 +1,80 @@
+//works for cellsize=1. why not for >1?? works now. forgot about 1/L^3 in rec sum
+//but doesnt work for all charges in unit cell works now. was double counting the extra terms 
+//now doesn't work if don't have charge neutrality
+//stable for all charges same. now trying with one -
+
+//perhaps the rec sum is fine, problem is outside that
+//works for neutral charge... or at least is invariant under alpha
+
+//has to be a way to check these energy values
+//could probably brute force the neutral cell
+
+//next step is to do for dipoles. even though non-charge neutral is not working (anyway that problem is probably not in the high alpha terms)
+//i simply substituted teh dipole formulas instead of the monopole formulas. not working
+
+
+
+Consider large alpha. The selfint term for dipoles scales as alpha^3, but for
+monopoles it scales as alpha^1. For high alpha, the real sum is basically 0.
+So, the high scaling of the selfint term should be balanced by larger scaling
+of the reciprocal sum. however I dont see any reason for that term to scale
+faster with alpha for dipoles than for monopoles.
+
+Even for cellsize=1, changing charray's later entries changes the energy. find
+out what's going on there.
+^^Did this actually happen? dont think so...
+
+
+Putting alpha really low gives a constant answer for the energy, until start
+going where more vectors needed for convergence. Can tell this by increasing
+real_cut and the curve simply moves to the left (figure_1).
+I think it's not exactly constant..
+
+
+
+8/26: For dipole, I added a 4pi^2 to the recsum. Now, the energy approaches
+two limiting values as alpha goes high or low; no longer increasing/decreasing
+without bound. Step in the right direction, however why are there two values?
+Also, for small alpha, the limit is just about -2 times the limit for large
+alpha. Same result for cellsize>1 (only tried with all same)
+maybe suggests terms are out of balance somehow?
+
+Did it. Missing a factor of 0.5 in realsum. Because that factor was with erfc,
+which I replaced only with the expression from dipole sum, forgetting about
+the 1/2.
+
+
+Adding a basis seems to work... keep the k vectors the same, add extra for
+loop
+
+Now move to pyrochlore
+
+
+
+
+Now working with FCC (added 10/18: should have specified what I meant by this,
+would have saved a day of thinking)
+
+Now working with FCC + basis
+
+JUst have to put 4-part basis, orientation of dipoles, and reading in dipole states. Then done.
+
+4-part basis working
+
+For orientation, have to take into account 2 kinds of tetrahedrons. done i think. check this
+
+
+Then still have to do NN energy
+
+All done. Think should still check NNenergy.
+
+Now just see if can return each i,j separately (this is done too)
+
+
+9/15: Now really done. Problems with NN  were found and fixed
+
+
+10/17: REOPENED have wrong number of spins; 4*cellsize^3 instead of
+16*cellsize^3
+
+10/18: turns out this code is fine, its the MC one which had wrong assumptions
