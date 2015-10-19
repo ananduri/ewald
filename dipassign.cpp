@@ -1,6 +1,6 @@
 #include "ewald.h"
-
-void dipassign(double* dip, int m, bool ori) {
+//can make this just like boffset, once thats fixed
+void dipassign(double* dip, int m) {
 
 	dip[0] = 1.0;
 	dip[1] = 1.0;
@@ -12,7 +12,7 @@ void dipassign(double* dip, int m, bool ori) {
 	
 	//normalization and orientation
 	for(int x=0; x<3; x++) {
-		dip[x] = (ori) ? dip[x] : -dip[x]; //better would be dip[x] -= (!ori)*2*dip[x];
+		//dip[x] = (ori) ? dip[x] : -dip[x]; //better would be dip[x] -= (!ori)*2*dip[x];
 		dip[x] /= sqrt(3);
 	}
 	

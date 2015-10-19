@@ -1,77 +1,42 @@
 #include "ewald.h"
 
-double realsum(double x, double y, double z, double m, double alpha, int real_cut, double cellsize, int bsize, bool charray[], double *totNNenergy, double* intmat){
+double realsum(double x, double y, double z, int m, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
 	using namespace std;
+
+	extern inline double B(double, double);
+	extern inline double C(double, double);
 	
 	double real=0;
 	
+	double off[12] = {0, 0, 0,
+			0, 0.25, 0.25,
+			0.25, 0, 0.25,
+			0.25, 0.25, 0};
 
-	//double checkintmat = 0;
+	double dipoff[12] = {is3, is3, is3,
+				-is3, is3, is3,
+				is3, -is3, is3,
+				is3, is3, -is3};
 
-	double mu1[3];
-	double mu2[3];
+	double* mu1;
+	double* mu2;
 
-	double boffset1[3] = {0.0};
+	double* boffset1;
 
 	double indenergy;
 	double NNenergy;
 
 	int N = bsize*cellsize*cellsize*cellsize;
 
-	/*if(m==0) { 
-		boffset1[0] = 0;
-		boffset1[1] = 0;
-		boffset1[2] = 0;
-	}
-	else if(m==1) {
-		boffset1[0] = 0.25;
-		boffset1[1] = 0.25;
-		boffset1[2] = 0;
-	}
-	else if(m==2) { 
-		boffset1[0] = 0;
-		boffset1[1] = 0.25;
-		boffset1[2] = 0.25;
-	}
-	else if(m==3) { 
-		boffset1[0] = 0.25;
-		boffset1[1] = 0;
-		boffset1[2] = 0.25;
-	}*/
-
-	boffsetassign(boffset1, m);
-
+	boffset1 = &off[3*m];
 
 	for(int u=0; u<cellsize; ++u){
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
 
-
-	double boffset2[3];
-	boffsetassign(boffset2, s);
-
-	/*if(s==0) { 
-		boffset2[0] = 0;
-		boffset2[1] = 0;
-		boffset2[2] = 0;
-	}
-	else if(s==1) {
-		boffset2[0] = 0.25;
-		boffset2[1] = 0.25;
-		boffset2[2] = 0;
-	}
-	else if(s==2) { 
-		boffset2[0] = 0;
-		boffset2[1] = 0.25;
-		boffset2[2] = 0.25;
-	}
-	else if(s==3) { 
-		boffset2[0] = 0.25;
-		boffset2[1] = 0;
-		boffset2[2] = 0.25;
-	}*/
-
+	double* boffset2;
+	boffset2 = &off[3*s];
 
 	double r, X, Y, Z;
 	double first, second, dot;
@@ -91,44 +56,16 @@ double realsum(double x, double y, double z, double m, double alpha, int real_cu
 
 				if(r>0.001){
 
-					dipassign(mu1, m, charray[(int)(bsize*cellsize*cellsize*x + bsize*cellsize*y + bsize*z + m)]);
-
-					dipassign(mu2, s, charray[(int)(bsize*cellsize*cellsize*u + bsize*cellsize*v + bsize*w + s)]);
-
-
-					/*if(charray[(int)(bsize*cellsize*cellsize*x + bsize*cellsize*y + bsize*z + m)]){
-						mu1[0] = 0;
-						mu1[1] = 0;
-						mu1[2] = 1;
-					}
-					else {
-						mu1[0] = 0;
-						mu1[1] = 0;
-						mu1[2] = -1;
-					}
-					if(charray[(int)(bsize*cellsize*cellsize*u + bsize*cellsize*v + bsize*w + s)]){
-						mu2[0] = 0;
-						mu2[1] = 0;
-						mu2[2] = 1;
-					}
-					else {
-						mu2[0] = 0;
-						mu2[1] = 0;
-						mu2[2] = -1;
-					}*/
-
-
+					mu1 = &dipoff[3*m];
+	
+					mu2 = &dipoff[3*s];
 					
 					dot = (mu1[0]*mu2[0] + mu1[1]*mu2[1] + mu1[2]*mu2[2]);
 
-					//if(r<1.0) {printf("r: %.3f, i: %d, j: %d, k: %d\n",r,i,j,k);}
-				
 					if((r < 0.4) && (i==0) && (j==0) && (k==0)) { //this and the below line are both OK now
 					//if(r<0.4) 
 						NNenergy += J*dot/2;
-						//std::cout<< "NNplus: " << J*dot/2 << "\n";
 					}
-
 
 					first = dot * B(r,alpha);
 
@@ -142,19 +79,12 @@ double realsum(double x, double y, double z, double m, double alpha, int real_cu
 		}
 	}
 
-		//std::cout << "NNenergy: " << NNenergy << "\n";
-
 		intmat[(int)((bsize*cellsize*cellsize*x + bsize*cellsize*y + bsize*z + m)*N + bsize*cellsize*cellsize*u + bsize*cellsize*v + bsize*w + s)] += indenergy + NNenergy;
 		*totNNenergy += NNenergy;
-		//checkintmat += indenergy;
-
 			}
 			}
 		}
 	}
-	
-	//cout << "realenergy: " << real << '\n';
-	//cout << "indenergy: " << checkintmat << '\n';
 	
 	return real;
 }

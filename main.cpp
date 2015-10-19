@@ -4,6 +4,8 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
+	time_t start = time(NULL);
+
 	double alpha;
 	int real_cut, recip_cut, cellsize;
 	
@@ -16,41 +18,16 @@ int main(int argc, char *argv[]){
 
 	int N = bsize*cellsize*cellsize*cellsize;
 	
-	bool* charray = NULL;
-	charray = new bool[N];
+	double off[12] = {0, 0, 0,
+			0, 0.25, 0.25,
+			0.25, 0, 0.25,
+			0.25, 0.25, 0}; 
 
-	for(int i=0;i<N;i++) {
-		charray[i] = true;
-	}
-	
-
-
-	//for(int i =0;i<N;i++){
-	//	cout << charray[i] << endl;
-	//}
-
-
-	//charray[0] = true;
-	//charray[20] = true;
-
-	/*for(int i=0; i<cellsize; i++) {
-		for(int j=0; j<cellsize; j++) {
-			for(int k=0; k<cellsize; k++) {
-				for (int l=0; l<bsize; l++) {
-				cout << (charray[bsize*cellsize*cellsize*i + bsize*cellsize*j + bsize*k + l] ? "true" : "false") << endl;
-			}
-			}
-		}
-	}*/
-
-	
 	double* intmat = NULL;
 	intmat = new double[N*N];
 	for(int i=0;i<N*N;i++){
 		intmat[i] = 0.0;
 	}
-
-
 
 	double realenergy = 0;
 	double kenergy=0;	
@@ -60,13 +37,12 @@ int main(int argc, char *argv[]){
 		for(int j=0; j<cellsize; j++) {
 			for(int k=0; k<cellsize; k++) {
 			for(int m=0; m<bsize; m++){
-				realenergy += realsum(i,j,k,m,alpha,real_cut,cellsize,bsize,charray,&totNNenergy,intmat);
-				kenergy += recsum(i,j,k,m,alpha,recip_cut,cellsize,bsize,charray,intmat);
+				realenergy += realsum(i,j,k,m,alpha,real_cut,cellsize,bsize,&totNNenergy,intmat);
+				kenergy += recsum(i,j,k,m,alpha,recip_cut,cellsize,bsize,intmat);
 			}
 			}
 		}
 	}
-	delete[] charray;
 
 	double selfenergy = selfint(alpha,cellsize,bsize);
 
@@ -76,7 +52,7 @@ int main(int argc, char *argv[]){
 	cout << "Ewald : " << realenergy + kenergy + selfenergy << '\n';
 
 
-	//write to a binary file in first piece
+	//write to a binary file
 	FILE* bmatstream;
 	char bmatname[50];
 	sprintf(bmatname,"Intmat_a%d_r%d_k%d.bin",cellsize,real_cut,recip_cut);
@@ -85,9 +61,7 @@ int main(int argc, char *argv[]){
 	fwrite(intmat, sizeof(double), N*N, bmatstream);
 	fclose(bmatstream);
 
-
-
-	char matname[50];
+	/*char matname[50];
 	sprintf(matname,"Intmat_a%d_r%d_k%d.txt",cellsize,real_cut,recip_cut);
 
 	ofstream matfile;
@@ -95,8 +69,17 @@ int main(int argc, char *argv[]){
 	for(int i=0;i<N*N;i++) {
 		matfile << intmat[i] << '\n';
 	}
-	matfile.close();
+	matfile.close();*/
 
 	delete[] intmat;
+
+	time_t end = time(NULL);
+
+	printf("cellsize: %d\n",cellsize);
+
+	printf("\n");
+	printf("time: %5.3f\n", (double)(end - start));
+	printf("in hours: %2.2f\n", (double)(end - start)/3600);
+
 	return 0;
 }

@@ -78,3 +78,7 @@ Now just see if can return each i,j separately (this is done too)
 16*cellsize^3
 
 10/18: turns out this code is fine, its the MC one which had wrong assumptions
+
+but what gives size of Intmat binaries?
+(bsize*cellsize^3)^2 doubles in matrix, so that times 8 bytes per double gives
+size
