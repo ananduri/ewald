@@ -4,8 +4,6 @@ double recsum(double x, double y, double z, int m, double alpha, int recip_cut, 
 
 	extern inline double structure2(double, double, double, double, double, double);
 
-	using namespace std;	
-
 	double recip=0, k2;
 	
 	double indenergy;

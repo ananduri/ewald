@@ -1,7 +1,6 @@
 #include "ewald.h"
 
 double realsum(double x, double y, double z, int m, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
-	using namespace std;
 
 	extern inline double B(double, double);
 	extern inline double C(double, double);
@@ -62,8 +61,8 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 					
 					dot = (mu1[0]*mu2[0] + mu1[1]*mu2[1] + mu1[2]*mu2[2]);
 
-					if((r < 0.4) && (i==0) && (j==0) && (k==0)) { //this and the below line are both OK now
-					//if(r<0.4) 
+					if(r < 0.4) { 
+					//if((r < 0.4) && (i==0) && (j==0) && (k==0)) { //which is right here? actually this is physically wrong?
 						NNenergy += J*dot/2;
 					}
 
@@ -74,7 +73,7 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 					real += rnn*rnn*rnn*D*0.5*(first + second);
 					
 					indenergy += rnn*rnn*rnn*D*0.5*(first+second);
-					}
+				}
 			}
 		}
 	}

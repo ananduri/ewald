@@ -82,3 +82,31 @@ Now just see if can return each i,j separately (this is done too)
 but what gives size of Intmat binaries?
 (bsize*cellsize^3)^2 doubles in matrix, so that times 8 bytes per double gives
 size
+
+
+
+may need to use bigger cutoffs for large cellsize?
+testing for cellsize=10
+
+Should think of it as: anything inside that many nested loops is
+i) where all the time is coming from
+ii) any change in efficiency will be magnified many times
+so time to make very small low-level optimizations?
+^^test this out
+
+I think all that I can do to speed up now, is use OpenMP
+
+cellsize=6 ~ 0.2 hr
+cellsize=8 ~ 0.7 hr
+cellsize=10 ~ 4 hrs
+should be O(cellsize^6)
+
+cellsize=12 wont fit in memory, have to do on the fly
+
+could calculate only for upper half, cut time in ~2
+
+recsum might be more important to optimize than realsum
+
+NN issue is again raised. I do think need to include interactions with NNs in
+image supercells. otherwise where do you account for the NN of a spin on the
+edge of the supercell? fixed this. should now be correct.
