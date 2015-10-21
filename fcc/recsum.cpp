@@ -10,7 +10,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	
 	double indenergy;
 
-	int N = bsize*cellsize*cellsize*cellsize;
+	int N = fsize*bsize*cellsize*cellsize*cellsize;
 
 	double* mu1;
 	double* mu2;
@@ -111,9 +111,9 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					kterm *= exp(-M_PI*M_PI*k2/(alpha*alpha));
 					kterm /= cellsize*cellsize*cellsize;
 
-					kterm /= 16.0;
+					kterm /= 16.0; //where the fuck does this come from
 
-					recip += rnn*rnn*rnn*D*4.0*0.5*kterm;
+					recip += rnn*rnn*rnn*D*4.0*0.5*kterm; //where does this 4 come from again, presumably half is b/c full matrix and not upper triangle
 
 					indenergy += rnn*rnn*rnn*D*4.0*0.5*kterm;
 					}

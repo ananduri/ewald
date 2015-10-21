@@ -34,7 +34,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 	double indenergy;
 	double NNenergy;
 
-	int N = bsize*cellsize*cellsize*cellsize;
+	int N = fsize*bsize*cellsize*cellsize*cellsize;
 
 	boffset1 = &off[3*m];
 	foffset1 = &foff[3*p];
@@ -87,7 +87,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 
 					second = -(mu1[0]*(X) + mu1[1]*(Y) + mu1[2]*(Z)) * (mu2[0]*(X) + mu2[1]*(Y) + mu2[2]*(Z)) * C(r,alpha);
 
-					real += rnn*rnn*rnn*D*0.5*(first + second);
+					real += rnn*rnn*rnn*D*0.5*(first + second); //factor of half is presumably because summing over whole matrix, instead of just upper triangle
 					
 					indenergy += rnn*rnn*rnn*D*0.5*(first+second);
 				}
@@ -95,7 +95,8 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 		}
 	}
 
-		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy;
+		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy; //this indexing wrong? yeah. copy into line below to test
+
 		*totNNenergy += NNenergy;
 			}
 			}

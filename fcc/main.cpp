@@ -19,10 +19,10 @@ int main(int argc, char *argv[]){
 
 	int N = fsize*bsize*cellsize*cellsize*cellsize;
 	
-	double off[12] = {0, 0, 0,
+	/*double off[12] = {0, 0, 0,
 			0, 0.25, 0.25,
 			0.25, 0, 0.25,
-			0.25, 0.25, 0}; //not necessary here?
+			0.25, 0.25, 0};*/ //not necessary here?
 
 	double* intmat = NULL;
 	intmat = new double[N*N];
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
 	//write to a binary file
 	FILE* bmatstream;
 	char bmatname[50];
-	sprintf(bmatname,"IntmatJ0_a%d_r%d_k%d.bin",cellsize,real_cut,recip_cut);
+	sprintf(bmatname,"IntMat_a%d_r%d_k%d.bin",cellsize,real_cut,recip_cut);
 	
 	bmatstream = fopen(bmatname, "wb");
 	fwrite(intmat, sizeof(double), N*N, bmatstream);
@@ -80,6 +80,8 @@ int main(int argc, char *argv[]){
 
 	printf("cellsize: %d\n",cellsize);
 	printf("alpha: %.2f\n",alpha);
+	printf("realcut: %d\n",real_cut);
+	printf("recip_cut: %d\n",recip_cut);
 
 	printf("\n");
 	printf("time: %5.3f\n", (double)(end - start));
