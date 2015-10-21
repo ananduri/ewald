@@ -1,6 +1,8 @@
 #include "ewald.h"
 
-double realsum(double x, double y, double z, int m, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
+double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
+
+	int fsize = bsize;
 
 	extern inline double B(double, double);
 	extern inline double C(double, double);
@@ -17,10 +19,17 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 				is3, -is3, is3,
 				is3, is3, -is3};
 
+	
+	double foff[12] = {0, 0, 0,
+			0, 0.5, 0.5,
+			0.5, 0, 0.5,
+			0.5, 0.5, 0};
+
 	double* mu1;
 	double* mu2;
 
 	double* boffset1;
+	double* foffset1;
 
 	double indenergy;
 	double NNenergy;
@@ -28,14 +37,18 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 	int N = bsize*cellsize*cellsize*cellsize;
 
 	boffset1 = &off[3*m];
+	foffset1 = &foff[3*p];
 
 	for(int u=0; u<cellsize; ++u){
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
+				for(int q=0; q<fsize; q++){
 
 	double* boffset2;
+	double* foffset2;
 	boffset2 = &off[3*s];
+	foffset2 = &foff[3*q];
 
 	double r, X, Y, Z;
 	double first, second, dot;
@@ -47,10 +60,14 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 		for (int j=(-1)*real_cut; j<=real_cut; ++j){
 			for (int k=(-1)*real_cut; k<=real_cut; ++k){
 
-				X = 0.5*((i+k)*cellsize + x-u + z-w) + boffset1[0] - boffset2[0]; 
-				Y = 0.5*((i+j)*cellsize + x-u + y-v) + boffset1[1] - boffset2[1];
-				Z = 0.5*((j+k)*cellsize + y-v + z-w) + boffset1[2] - boffset2[2];
+				//X = 0.5*((i+k)*cellsize + x-u + z-w) + boffset1[0] - boffset2[0]; 
+				//Y = 0.5*((i+j)*cellsize + x-u + y-v) + boffset1[1] - boffset2[1];
+				//Z = 0.5*((j+k)*cellsize + y-v + z-w) + boffset1[2] - boffset2[2];
 
+				X = ((double) i)*cellsize + x-u + boffset1[0]-boffset2[0] + foffset1[0]-foffset2[0];	
+				Y = ((double) j)*cellsize + y-v + boffset1[1]-boffset2[1] + foffset1[1]-foffset2[1];	
+				Z = ((double) k)*cellsize + z-w + boffset1[2]-boffset2[2] + foffset1[2]-foffset2[2];	
+		
 				r = sqrt(X*X + Y*Y + Z*Z);
 
 				if(r>0.001){
@@ -78,8 +95,9 @@ double realsum(double x, double y, double z, int m, double alpha, int real_cut, 
 		}
 	}
 
-		intmat[(int)((bsize*cellsize*cellsize*x + bsize*cellsize*y + bsize*z + m)*N + bsize*cellsize*cellsize*u + bsize*cellsize*v + bsize*w + s)] += indenergy + NNenergy;
+		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy;
 		*totNNenergy += NNenergy;
+			}
 			}
 			}
 		}

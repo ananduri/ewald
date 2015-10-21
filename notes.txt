@@ -57,7 +57,7 @@ would have saved a day of thinking)
 
 Now working with FCC + basis
 
-JUst have to put 4-part basis, orientation of dipoles, and reading in dipole states. Then done.
+Just have to put 4-part basis, orientation of dipoles, and reading in dipole states. Then done.
 
 4-part basis working
 
@@ -110,3 +110,17 @@ recsum might be more important to optimize than realsum
 NN issue is again raised. I do think need to include interactions with NNs in
 image supercells. otherwise where do you account for the NN of a spin on the
 edge of the supercell? fixed this. should now be correct.
+also was checked by including a printf statement inside NN if statement. each
+index (x,y,z,m) should be printed 6 times. it was correct without the
+i==j==k==0.
+
+^now getting completely flat exponential... that seems totally wrong
+
+WHY did I put in the i==j==k==0 term back then?
+
+
+I dont think the Ewald summation works for non-cubic simulation boxes. fuck
+
+Trying to redo it with cubic simulation box, but modified reciprocal lattice
+vector summation due to FCC primitive cell not being commensurate with cubic
+supercells
