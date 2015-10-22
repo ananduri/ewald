@@ -36,7 +36,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	double fkdict[12] = {0, 0, 0,
 				1, 0, 0,
 				0, 1, 0,
-				0, 0, 1}; //replace with cellsize instead?
+				0, 0, 1}; 
 
 	double* boffset1;
 	double* foffset1;
@@ -116,7 +116,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					recip += rnn*rnn*rnn*D*4.0*0.5*kterm; //where does this 4 come from again, presumably half is b/c full matrix and not upper triangle
 
 					indenergy += rnn*rnn*rnn*D*4.0*0.5*kterm;
-					}
+				}
 				}
 				}
 			}

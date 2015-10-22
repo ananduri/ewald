@@ -60,10 +60,6 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 		for (int j=(-1)*real_cut; j<=real_cut; ++j){
 			for (int k=(-1)*real_cut; k<=real_cut; ++k){
 
-				//X = 0.5*((i+k)*cellsize + x-u + z-w) + boffset1[0] - boffset2[0]; 
-				//Y = 0.5*((i+j)*cellsize + x-u + y-v) + boffset1[1] - boffset2[1];
-				//Z = 0.5*((j+k)*cellsize + y-v + z-w) + boffset1[2] - boffset2[2];
-
 				X = ((double) i)*cellsize + x-u + boffset1[0]-boffset2[0] + foffset1[0]-foffset2[0];	
 				Y = ((double) j)*cellsize + y-v + boffset1[1]-boffset2[1] + foffset1[1]-foffset2[1];	
 				Z = ((double) k)*cellsize + z-w + boffset1[2]-boffset2[2] + foffset1[2]-foffset2[2];	
@@ -79,7 +75,6 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 					dot = (mu1[0]*mu2[0] + mu1[1]*mu2[1] + mu1[2]*mu2[2]);
 
 					if(r < 0.4) { 
-					// if((r < 0.4) && (i==0) && (j==0) && (k==0)) //is this wrong?
 						NNenergy += J*dot/2;
 					}
 
@@ -87,7 +82,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 
 					second = -(mu1[0]*(X) + mu1[1]*(Y) + mu1[2]*(Z)) * (mu2[0]*(X) + mu2[1]*(Y) + mu2[2]*(Z)) * C(r,alpha);
 
-					real += rnn*rnn*rnn*D*0.5*(first + second); //factor of half is presumably because summing over whole matrix, instead of just upper triangle
+					real += rnn*rnn*rnn*D*0.5*(first + second); //factor of half is because summing over whole matrix, instead of just upper triangle
 					
 					indenergy += rnn*rnn*rnn*D*0.5*(first+second);
 				}
@@ -95,7 +90,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 		}
 	}
 
-		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy; //this indexing wrong? yeah. copy into line below to test
+		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy; 
 
 		*totNNenergy += NNenergy;
 			}

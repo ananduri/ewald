@@ -2,8 +2,8 @@
 #SBATCH -J ewald
 #SBATCH -p New
 #SBATCH -n 1
-#SBATCH -t 03:59:00
+#SBATCH -t 72:59:00
 
 cd /home/ananduri/ewald/fcc
 
-prod/a 2 $1 3 10
+prod/a $1 5 4 18

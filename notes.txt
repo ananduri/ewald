@@ -124,3 +124,6 @@ I dont think the Ewald summation works for non-cubic simulation boxes. fuck
 Trying to redo it with cubic simulation box, but modified reciprocal lattice
 vector summation due to FCC primitive cell not being commensurate with cubic
 supercells
+
+This seems to be working. i cant see anything else that could be wrong with
+the code
