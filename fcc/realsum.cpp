@@ -1,6 +1,6 @@
 #include "ewald.h"
 
-double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
+double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat, double* Jmat, double* Dmat){
 
 	int fsize = bsize;
 
@@ -39,7 +39,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 	boffset1 = &off[3*m];
 	foffset1 = &foff[3*p];
 
-	for(int u=0; u<cellsize; ++u){
+	for(int u=0; u<cellsize; ++u){ //changed indices here
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
@@ -49,6 +49,8 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 	double* foffset2;
 	boffset2 = &off[3*s];
 	foffset2 = &foff[3*q];
+
+	double Ddis, Jdis;
 
 	double r, X, Y, Z;
 	double first, second, dot;
@@ -75,22 +77,28 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 					dot = (mu1[0]*mu2[0] + mu1[1]*mu2[1] + mu1[2]*mu2[2]);
 
 					if(r < 0.4) { 
-						NNenergy += J*dot/2;
+						Jdis = Jmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
+						NNenergy += Jdis*dot/2;
 					}
 
 					first = dot * B(r,alpha);
 
 					second = -(mu1[0]*(X) + mu1[1]*(Y) + mu1[2]*(Z)) * (mu2[0]*(X) + mu2[1]*(Y) + mu2[2]*(Z)) * C(r,alpha);
 
-					real += rnn*rnn*rnn*D*0.5*(first + second); //factor of half is because summing over whole matrix, instead of just upper triangle
+					Ddis = Dmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
+
+					real += rnn*rnn*rnn*Ddis*0.5*(first + second); //factor of half is because summing over whole matrix, instead of just upper triangle
+					//real += rnn*rnn*rnn*D*(first + second); //removed factor of half
 					
-					indenergy += rnn*rnn*rnn*D*0.5*(first+second);
+					indenergy += rnn*rnn*rnn*Ddis*0.5*(first+second);
+					//indenergy += rnn*rnn*rnn*D*(first+second); //removed factor of half
 				}
 			}
 		}
 	}
 
 		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy + NNenergy; 
+		//intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*1 + N*(fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q))] += indenergy + NNenergy; //had to reverse indexing
 
 		*totNNenergy += NNenergy;
 			}

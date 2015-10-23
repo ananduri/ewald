@@ -8,11 +8,15 @@ int main(int argc, char *argv[]){
 
 	double alpha;
 	int real_cut, recip_cut, cellsize;
+	double etaJ,etaD;
 	
 	cellsize = atoi(argv[1]);
 	alpha = strtod(argv[2],NULL);
 	real_cut = atoi(argv[3]);
 	recip_cut = atoi(argv[4]);
+	etaJ = strtod(argv[5],NULL);
+	etaD = strtod(argv[6],NULL);
+	
 
 	int bsize = 4;
 	int fsize = 4;
@@ -24,14 +28,36 @@ int main(int argc, char *argv[]){
 			0.25, 0, 0.25,
 			0.25, 0.25, 0};*/ //not necessary here?
 
+	//int halfintmat = (int)(N*(N+1)/2);
+
 	double* intmat = NULL;
 	intmat = new double[N*N];
 	for(int i=0;i<N*N;i++){
 		intmat[i] = 0.0;
 	}
 
-	double realenergy = 0;
-	double kenergy=0;	
+	srand(time(NULL));
+	int seed = rand();
+	CRandomMersenne RanGen_mersenne(seed);
+
+	//for adding disorder
+	//easiest thing to do is create N by N for D and N by N for J
+	double* Jmat = (double*)calloc(N*N,sizeof(double));
+	double* Dmat = (double*)calloc(N*N,sizeof(double));
+
+	for(int i=0;i<N;i++)
+	{
+		for(int j=i+1;j<N;j++)
+		{
+			Jmat[i*N + j] = J + etaJ*(2*RanGen_mersenne.Random() - 1);
+			Jmat[j*N + i] = Jmat[i*N + j];
+			Dmat[i*N + j] = D + etaD*(2*RanGen_mersenne.Random() - 1);
+			Dmat[j*N + i] = Dmat[i*N + j];
+		}
+	}
+
+
+double realenergy = 0; double kenergy=0;	
 	double totNNenergy=0;
 
 	for(int i=0; i<cellsize; i++) {
@@ -39,8 +65,8 @@ int main(int argc, char *argv[]){
 			for(int k=0; k<cellsize; k++) {
 			for(int m=0; m<bsize; m++){
 			for(int p=0; p<fsize; p++){
-				realenergy += realsum(i,j,k,m,p,alpha,real_cut,cellsize,bsize,&totNNenergy,intmat);
-				kenergy += recsum(i,j,k,m,p,alpha,recip_cut,cellsize,bsize,intmat);
+				realenergy += realsum(i,j,k,m,p,alpha,real_cut,cellsize,bsize,&totNNenergy,intmat,Jmat,Dmat);
+				kenergy += recsum(i,j,k,m,p,alpha,recip_cut,cellsize,bsize,intmat,Jmat,Dmat);
 			}
 			}
 			}
@@ -58,7 +84,7 @@ int main(int argc, char *argv[]){
 	//write to a binary file
 	FILE* bmatstream;
 	char bmatname[50];
-	sprintf(bmatname,"IntMat_a%d_r%d_k%d.bin",cellsize,real_cut,recip_cut);
+	sprintf(bmatname,"IntMatdis_J%.2f_D%.2f_a%d_r%d_k%d.bin",etaJ,etaD,cellsize,real_cut,recip_cut);
 	
 	bmatstream = fopen(bmatname, "wb");
 	fwrite(intmat, sizeof(double), N*N, bmatstream);
@@ -75,6 +101,8 @@ int main(int argc, char *argv[]){
 	matfile.close();*/
 
 	delete[] intmat;
+	free(Jmat);
+	free(Dmat);
 
 	time_t end = time(NULL);
 

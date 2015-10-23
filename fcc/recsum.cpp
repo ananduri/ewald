@@ -1,6 +1,6 @@
 #include "ewald.h"
 
-double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat){
+double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat, double* Jmat, double* Dmat){
 
 	int fsize = bsize;
 
@@ -43,7 +43,9 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	boffset1 = &off[3*m];
 	foffset1 = &foff[3*p];
 
-	for(int u=0; u<cellsize; ++u){
+	double Jdis,Ddis;
+
+	for(int u=0; u<cellsize; ++u){ //changed indices
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
@@ -113,9 +115,13 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 
 					kterm /= 16.0; //where the fuck does this come from
 
-					recip += rnn*rnn*rnn*D*4.0*0.5*kterm; //where does this 4 come from again, presumably half is b/c full matrix and not upper triangle
+					Ddis = Dmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
 
-					indenergy += rnn*rnn*rnn*D*4.0*0.5*kterm;
+					recip += rnn*rnn*rnn*Ddis*4.0*0.5*kterm; //where does this 4 come from again, presumably half is b/c full matrix and not upper triangle
+					//recip += rnn*rnn*rnn*D*4.0*kterm; //removed factor of half
+
+					indenergy += rnn*rnn*rnn*Ddis*4.0*0.5*kterm;
+					//indenergy += rnn*rnn*rnn*D*4.0*kterm; //removed factor of half
 				}
 				}
 				}
@@ -123,6 +129,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 		}
 
 		intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)] += indenergy;
+		//intmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*1 + N*(fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q))] += indenergy; //had to reverse indices
 		}
 		}
 		}
