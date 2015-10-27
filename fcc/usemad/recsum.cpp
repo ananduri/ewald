@@ -18,13 +18,13 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	double dipk1;
 	double dipk2;
 
-	double off[12] = {0, 0, 0,
-			0.5, 0, 0};
+	//double off[12] = {0, 0, 0,
+	//		0.5, 0, 0};
 
-	/*double off[12] = {0, 0, 0,
+	double off[12] = {0, 0, 0,
 			0, 0.25, 0.25,
 			0.25, 0, 0.25,
-			0.25, 0.25, 0};*/
+			0.25, 0.25, 0};
 
 	double foff[12] = {0, 0, 0,
 			0, 0.5, 0.5,
@@ -36,17 +36,17 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 				is3, -is3, is3,
 				is3, is3, -is3};
 
-	double fkdict[12] = {0, 0, 0,
+	/*double fkdict[12] = {0, 0, 0,
 				1, 0, 0,
 				0, 1, 0,
-				0, 0, 1}; 
+				0, 0, 1}; */
 
 	double* boffset1;
 	double* foffset1;
 	boffset1 = &off[3*m];
 	foffset1 = &foff[3*p];
 
-	for(int u=0; u<cellsize; ++u){ //changed indices
+	for(int u=0; u<cellsize; ++u){ 
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
@@ -73,14 +73,11 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	for (int i=(-1)*recip_cut; i<=recip_cut; i++){
 		for (int j=(-1)*recip_cut; j<=recip_cut; j++){
 			for (int k=(-1)*recip_cut; k<=recip_cut; k++){
-			for (int fk=0; fk<1; fk++){ //changed to 1
 
 				//factors of 1/2, 2pis, and cellsize were taken from here and put in below, so be careful
 				/*I = (double) (i - j + k); //FCC
 				J = (double) (i + j - k);
 				K = (double) (-i + j + k);*/
-
-				fkvec = &fkdict[3*fk];
 
 				//here define the allowed kvecs
 				//currently: factor of 2pi/cellsize included LATER
@@ -108,7 +105,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					dipk1 = mu1[0]*I/cellsize + mu1[1]*J/cellsize + mu1[2]*K/cellsize;
 					dipk2 = mu2[0]*I/cellsize + mu2[1]*J/cellsize + mu2[2]*K/cellsize;
 
-					kterm = 1;
+					/*kterm = 1;
 					kterm *= dipk1*dipk2*4*M_PI*M_PI;
 					kterm *= 1.0/(M_PI*k2);
 					kterm *= structure2(sfx, sfy, sfz, I/cellsize,J/cellsize,K/cellsize);
@@ -116,13 +113,21 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					kterm /= cellsize*cellsize*cellsize;
 
 					kterm /= 16.0; //where the fuck does this come from, possibly a factor of 4 from fkvec duplicating?
-					//kterm /= 4; 
+					//kterm /= 4; */
 
-					//recip += rnn*rnn*rnn*D*4.0*0.5*kterm; //where does this 4 come from again, presumably half is b/c full matrix and not upper triangle
+					kterm = 1;
+					kterm *= dipk1*dipk2;
+					kterm /= 2*M_PI*k2*cellsize*cellsize*cellsize;
+					kterm *= structure2(sfx,sfy,sfz, I/cellsize, J/cellsize, K/cellsize);
+					kterm *= exp(-M_PI*M_PI*k2/(alpha*alpha));
 
-					//indenergy += rnn*rnn*rnn*D*4.0*0.5*kterm;
+					kterm *= 4*M_PI*M_PI; //also in dipole dot prods
+
+					recip += rnn*rnn*rnn*D*kterm; 
+
+					indenergy += rnn*rnn*rnn*D*kterm;
 					
-					ch1 = 2*(m==1) - 1;
+					/*ch1 = 2*(m==1) - 1;
 					ch2 = 2*(s==1) - 1;
 	
 					mkterm = 1;
@@ -132,8 +137,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					mkterm *= exp(-M_PI*M_PI*k2/(alpha*alpha));
 	
 					recip += mkterm;
-					indenergy += mkterm; //including 0.5 because doing whole matrix instead of half (even with no 0.5 written)
-				}
+					indenergy += mkterm; //including 0.5 because doing whole matrix instead of half (even with no 0.5 written)*/
 				}
 				}
 			}

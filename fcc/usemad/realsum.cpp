@@ -1,11 +1,12 @@
 #include "ewald.h"
 
-double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat, double* Jmat, double* Dmat){
+double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double *totNNenergy, double* intmat){
 
-	int fsize = bsize;
+	int fsize = 4;
 
 	extern inline double B(double, double);
 	extern inline double C(double, double);
+	extern inline double A(double, double);
 	
 	double real=0;
 	
@@ -13,6 +14,10 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 			0, 0.25, 0.25,
 			0.25, 0, 0.25,
 			0.25, 0.25, 0};
+
+
+	//double off[12] = {0, 0, 0,
+	//		0.5, 0, 0};
 
 	double dipoff[12] = {is3, is3, is3,
 				-is3, is3, is3,
@@ -50,10 +55,9 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 	boffset2 = &off[3*s];
 	foffset2 = &foff[3*q];
 
-	double Ddis, Jdis;
-
 	double r, X, Y, Z;
 	double first, second, dot;
+	double ch1, ch2;
 
 	indenergy = 0;
 	NNenergy = 0;
@@ -77,21 +81,22 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 					dot = (mu1[0]*mu2[0] + mu1[1]*mu2[1] + mu1[2]*mu2[2]);
 
 					if(r < 0.4) { 
-						Jdis = Jmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
-						NNenergy += Jdis*dot/2;
+						NNenergy += J*dot/2;
 					}
 
 					first = dot * B(r,alpha);
 
 					second = -(mu1[0]*(X) + mu1[1]*(Y) + mu1[2]*(Z)) * (mu2[0]*(X) + mu2[1]*(Y) + mu2[2]*(Z)) * C(r,alpha);
 
-					Ddis = Dmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
-
-					real += rnn*rnn*rnn*Ddis*0.5*(first + second); //factor of half is because summing over whole matrix, instead of just upper triangle
-					//real += rnn*rnn*rnn*Ddis*0.5*(first + second)*4; //testing, mult by 4
+					real += rnn*rnn*rnn*D*0.5*(first + second); //factor of half is because summing over whole matrix, instead of just upper triangle
 					
-					indenergy += rnn*rnn*rnn*Ddis*0.5*(first+second);
-					//indenergy += rnn*rnn*rnn*Ddis*0.5*(first+second)*4; //testing, mult by 4
+					indenergy += rnn*rnn*rnn*D*0.5*(first+second);
+
+					//ch1 = 2*(m==1) - 1;
+					//ch2 = 2*(s==1) - 1;
+					
+					//real += ch1*ch2*0.5*A(r,alpha); //including factor of half from whole matrix instead of upper half
+					//indenergy += ch1*ch2*0.5*A(r,alpha);
 				}
 			}
 		}

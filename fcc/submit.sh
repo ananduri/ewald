@@ -6,4 +6,4 @@
 
 cd /home/ananduri/ewald/fcc
 
-prod/a $1 1 10 6 $2 $3
+prod/a $1 $2 $3 $4  0 0

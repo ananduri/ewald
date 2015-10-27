@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 	}
 
 
-double realenergy = 0; double kenergy=0;	
+	double realenergy = 0; double kenergy=0;	
 	double totNNenergy=0;
 
 	for(int i=0; i<cellsize; i++) {

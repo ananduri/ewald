@@ -92,8 +92,8 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 					
 					//indenergy += rnn*rnn*rnn*D*0.5*(first+second);
 
-					ch1 = 2*(m==0) - 1;
-					ch2 = 2*(s==0) - 1;
+					ch1 = 2*(m==1) - 1;
+					ch2 = 2*(s==1) - 1;
 					
 					real += ch1*ch2*0.5*A(r,alpha); //including factor of half from whole matrix instead of upper half
 					indenergy += ch1*ch2*0.5*A(r,alpha);

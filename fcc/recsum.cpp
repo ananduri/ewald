@@ -85,7 +85,6 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 				J = (double)j + cellsize*fkvec[1];
 				K = (double)k + cellsize*fkvec[2]; 
 
-
 				//sfx = 0.5*(x-u + z-w) + boffset1[0] - boffset2[0];
 				//sfy = 0.5*(x-u + y-v) + boffset1[1] - boffset2[1];
 				//sfz = 0.5*(y-v + z-w) + boffset1[2] - boffset2[2];
@@ -113,7 +112,8 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 					kterm *= exp(-M_PI*M_PI*k2/(alpha*alpha));
 					kterm /= cellsize*cellsize*cellsize;
 
-					kterm /= 16.0; //where the fuck does this come from
+					kterm /= 16.0; //where the fuck does this come from, possibly a factor of 4 from fkvec duplicating?
+					//kterm /= 4; 
 
 					Ddis = Dmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
 

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 	real_cut = atoi(argv[3]);
 	recip_cut = atoi(argv[4]);
 
-	int bsize = 2; //changed to 2
+	int bsize = 4;
 	int fsize = 4;
 
 	int N = fsize*bsize*cellsize*cellsize*cellsize;
@@ -37,11 +37,11 @@ int main(int argc, char *argv[]){
 	double realenergy = 0; double kenergy=0;	
 	double totNNenergy=0;
 
-	for(int i=0; i<1; i++) {
-		for(int j=0; j<1; j++) {
-			for(int k=0; k<1; k++) {
-			for(int m=0; m<1; m++){
-			for(int p=0; p<1; p++){
+	for(int i=0; i<cellsize; i++) {
+		for(int j=0; j<cellsize; j++) {
+			for(int k=0; k<cellsize; k++) {
+			for(int m=0; m<bsize; m++){
+			for(int p=0; p<fsize; p++){
 				realenergy += realsum(i,j,k,m,p,alpha,real_cut,cellsize,bsize,&totNNenergy,intmat);
 				kenergy += recsum(i,j,k,m,p,alpha,recip_cut,cellsize,bsize,intmat);
 			}
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 
 	double selfenergy = selfint(alpha,cellsize,bsize);
 
-	//cout << "NN: " << totNNenergy << '\n';
+	cout << "NN: " << totNNenergy << '\n';
 	cout << "selfenergy: " << selfenergy << '\n';
 	cout << "Ewald w/o selfen: " << realenergy + kenergy << '\n';
 	cout << "Ewald : " << realenergy + kenergy + selfenergy << '\n';
