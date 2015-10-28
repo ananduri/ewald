@@ -37,11 +37,18 @@ int main(int argc, char *argv[]){
 	double realenergy = 0; double kenergy=0;	
 	double totNNenergy=0;
 
+	/*for(int i=0; i<cellsize; i++) {
+		for(int j=0; j<cellsize; j++) {
+			for(int k=0; k<cellsize; k++) {
+			for(int m=0; m<bsize; m++){
+			for(int p=0; p<fsize; p++){*/
+
 	for(int i=0; i<1; i++) {
 		for(int j=0; j<1; j++) {
 			for(int k=0; k<1; k++) {
 			for(int m=0; m<1; m++){
 			for(int p=0; p<1; p++){
+
 				realenergy += realsum(i,j,k,m,p,alpha,real_cut,cellsize,bsize,&totNNenergy,intmat);
 				kenergy += recsum(i,j,k,m,p,alpha,recip_cut,cellsize,bsize,intmat);
 			}
@@ -59,13 +66,13 @@ int main(int argc, char *argv[]){
 
 
 	//write to a binary file
-	FILE* bmatstream;
+	/*FILE* bmatstream;
 	char bmatname[50];
 	sprintf(bmatname,"IntMat_a%d_r%d_k%d.bin",cellsize,real_cut,recip_cut);
 	
 	bmatstream = fopen(bmatname, "wb");
 	fwrite(intmat, sizeof(double), N*N, bmatstream);
-	fclose(bmatstream);
+	fclose(bmatstream);*/
 
 	/*char matname[50];
 	sprintf(matname,"Intmat_a%d_r%d_k%d.txt",cellsize,real_cut,recip_cut);

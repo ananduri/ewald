@@ -19,7 +19,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 	double dipk2;
 
 	double off[12] = {0, 0, 0,
-			0.5, 0, 0};
+			0.25, 0.25, 0.25};
 
 	/*double off[12] = {0, 0, 0,
 			0, 0.25, 0.25,
@@ -80,7 +80,7 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 				J = (double) (i + j - k);
 				K = (double) (-i + j + k);*/
 
-				fkvec = &fkdict[3*fk];
+				//fkvec = &fkdict[3*fk];
 
 				//here define the allowed kvecs
 				//currently: factor of 2pi/cellsize included LATER

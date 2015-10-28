@@ -1,6 +1,6 @@
 #include "ewald.h"
 
-double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat){
+double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat, double* Dmat){
 
 	int fsize = 4;
 
@@ -69,6 +69,8 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 
 	indenergy=0;
 
+	double Jdis,Ddis;
+
 	//do sum in k-space (leaving out k=0 term) //make sure cellsize is even
 	for (int i=(-1)*recip_cut; i<=recip_cut; i++){
 		for (int j=(-1)*recip_cut; j<=recip_cut; j++){
@@ -123,9 +125,11 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 
 					kterm *= 4*M_PI*M_PI; //also in dipole dot prods
 
-					recip += rnn*rnn*rnn*D*kterm; 
+					Ddis = Dmat[(int)((fsize*bsize*cellsize*cellsize*x + fsize*bsize*cellsize*y + fsize*bsize*z + fsize*m + p)*N + fsize*bsize*cellsize*cellsize*u + fsize*bsize*cellsize*v + fsize*bsize*w + fsize*s + q)];
 
-					indenergy += rnn*rnn*rnn*D*kterm;
+					recip += rnn*rnn*rnn*Ddis*kterm; 
+
+					indenergy += rnn*rnn*rnn*Ddis*kterm;
 					
 					/*ch1 = 2*(m==1) - 1;
 					ch2 = 2*(s==1) - 1;
@@ -150,6 +154,5 @@ double recsum(double x, double y, double z, int m, int p, double alpha, int reci
 		}
 		}
 		}
-	
 	return recip;
 }

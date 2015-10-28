@@ -6,4 +6,4 @@
 
 cd /home/ananduri/ewald/fcc/usemad
 
-prod/a $1 $2 $3 $4 
+prod/a $1 $2 $3 $4 $5 $6

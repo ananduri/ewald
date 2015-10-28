@@ -1,0 +1,10 @@
+selfenergy: -1444.33
+Ewald w/o selfen: 549.558
+Ewald : -894.768
+cellsize: 4
+alpha: 5.00
+realcut: 3
+recip_cut: 16
+
+time: 132.000
+in hours: 0.04

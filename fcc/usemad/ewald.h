@@ -16,6 +16,7 @@
 #include <fstream>
 #include <cmath>
 #include <cstdlib>
+#include "randomc.h"
 
 const double J = 3.72; 
 const double D = 1.41;
@@ -40,8 +41,8 @@ inline double A(double r, double alpha){
 	return ((1 - erf(alpha*r))/r);
 }
 
-double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double* NNenergy, double* intmat);
-double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat);
+double realsum(double x, double y, double z, int m, int p, double alpha, int real_cut, double cellsize, int bsize, double* NNenergy, double* intmat, double* Jmat, double* Dmat);
+double recsum(double x, double y, double z, int m, int p, double alpha, int recip_cut, double cellsize, int bsize, double* intmat, double* Dmat);
 
 double selfint(double alpha, double cellsize, int bsize);
 

@@ -17,8 +17,9 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 
 
 	double off[12] = {0, 0, 0,
-			0.5, 0, 0};
+			0.25, 0.25, 0.25};
 
+	//doesnt matter here
 	double dipoff[12] = {is3, is3, is3,
 				-is3, is3, is3,
 				is3, -is3, is3,
@@ -44,7 +45,7 @@ double realsum(double x, double y, double z, int m, int p, double alpha, int rea
 	boffset1 = &off[3*m];
 	foffset1 = &foff[3*p];
 
-	for(int u=0; u<cellsize; ++u){ //changed indices here
+	for(int u=0; u<cellsize; ++u){ 
 		for(int v=0; v<cellsize; ++v){
 			for(int w=0; w<cellsize; ++w){
 				for(int s=0; s<bsize; s++){
