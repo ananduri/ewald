@@ -1,0 +1,44 @@
+again, problem of not invariant wrt alpha
+
+realsum is probably correct? verify this, so can focus on recsum
+
+if realsum is probably correct, then Ewald(+selfenergy) is probably correct
+for small alpha. have to get large alpha value (ie recsum) to match that
+
+just b/c invariant with alpha, does it mean its right?
+both could be off by same factor (is this true? b/c of selfint?).
+more precisely realsum could be off by same factor as (recsum+selfint)
+
+selfint value is pretty ironclad
+
+but is there more insidious errors???
+
+only writing until index 4192??
+indexing in last line of realsum/recsum is wrong
+yeah i forgot to change value of N in recsum/realsum
+
+am going to have to compute only top half
+especially since now want to introduce disorder; if only top half, dont need
+to keep track of couplings, can generate them on the fly
+
+how to do top half only? ordinarily have j>i. here need u>x, v>y, ... q>p
+dont feel like making sure this works out at the moment
+
+with disorder, might make more sense to compute energies on the fly instead of
+before
+
+disorder definitely results in glassy behavior when its big.
+whats the smallest disorder can put in which will give glassy? even epsilon?
+
+different nature of disorder on J and D?
+
+time scale is off by ~factor 2 from J&H paper. that seems like too much.
+have to identify factor of 16. or could it be 4 and 4? selfint seems to say
+no, lets try
+also try modifying the kvectors? and whether there is double counting
+
+
+going to really test results by calculating madelung constants
+
+for madelung, positive or negative is determined by position in basis. NaCl is
+FCC basis with 2point basis, or SC with 8point basis. try all of these

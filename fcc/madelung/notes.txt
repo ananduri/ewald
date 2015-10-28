@@ -1,0 +1,24 @@
+going to really test results by calculating madelung constants
+
+for madelung, positive or negative is determined by position in basis. NaCl is
+FCC basis with 2point basis, or SC with 8point basis. try all of these
+
+have correct number (pretty sure) for NaCl, for alpha really small (proves
+realsum is correct, and easier to code
+
+have it correct, it seems. dont need to do weird reciprocal lattice stuff if
+doing FCC (also basis)
+
+trying to get it for CsCl as well
+why am off by factor of sqrt(3) for CsCl? but had it exactly right for Nacl?
+
+how does nearest neighbor enter this calculation
+answer: E = M/r0, where r0 is distance to nearest neighbor (of other kind)
+
+even for zincblende. energy is too low by factor of 1/2. 
+
+SOLVED: factor of half comes from fact that Ewald sum is for total energy, so
+sum is done over every pair of charges. but both i and j sums go over all
+indices, so a factor of half is implicitly included. this was unwittingly kept
+when I set i=0 and did a sum over only 1 ion to get madelung. so the madelung
+calculations work.

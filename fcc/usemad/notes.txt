@@ -1,0 +1,20 @@
+going to really test results by calculating madelung constants
+
+for madelung, positive or negative is determined by position in basis. NaCl is
+FCC basis with 2point basis, or SC with 8point basis. try all of these
+
+have correct number (pretty sure) for NaCl, for alpha really small (proves
+realsum is correct, and easier to code
+
+have it correct, it seems. dont need to do weird reciprocal lattice stuff if
+doing FCC (also basis)
+
+use madeling to tell how far should go with realcut and reccut to converge
+
+realsum should be completely right.
+
+its matching up again. only tricky part was including the 4pi*pi in dipole dot
+prods in recsum.
+
+seeming to give same total energy as before. will see if intmat, and decays,
+match up too
